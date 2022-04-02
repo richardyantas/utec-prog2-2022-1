@@ -24,21 +24,21 @@ int main(int argc, char** argv){
 	int arr[argc+1];
 	cout << "cantidad: " << argc << endl;
 	int cantidad = argc-1; // 3
-
 	for(int i=0; i<cantidad; i++){ // i: 0 1 2
 		arr[i] = atoi(argv[i+1]);
 	}
-	string s = "7 8 9 10 7  0 8 1 0 0 1\n";
+	//	Index ->  0 1 2 3 4 5
+	//  Input ->  1 5 3 2 7 2;    Input [2-4] :    3 + 2 + 7 = 12
 	for(int i=0; i<cantidad; i++){
 		cout << arr[i] << " ";
 	}
-
-	for(int i=0; i<cantidad; i++){
-		for(int j=0; j<cantidad; j++){
-			// pendiente
-		}
+	cout << endl;
+	int a=2, b=4;
+	int s=0;
+	for(int i=a; i<=b; i++){
+		s = s + arr[i];
 	}
-
+	cout << "suma de elementos en el intervalo [" << a<< "," << b << "] :" << s << endl;
 
 	return 0;
 }
