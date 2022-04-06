@@ -2,10 +2,8 @@
 using namespace std;
 
 int main(){
-  char c = 'w';
-  
+  char c = 'w';  
   string s = "utec"; // 0,1,2,3
-
   if(s.size()==4){
     cout << "A";
   }

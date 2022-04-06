@@ -5,7 +5,7 @@ using namespace std;
 int main(){
   char letra='A';
   int opt = 2;
-  switch(opt--)
+  switch(opt--) // 1
   {
     case 1:
       if(letra!='B')cout << "A"; break;
@@ -17,7 +17,7 @@ int main(){
   return 0;
 }
 
-// A <- 
-// B
+// A 
+// B <-
 // C
 // D
