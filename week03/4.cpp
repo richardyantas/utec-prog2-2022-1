@@ -11,6 +11,7 @@ void factorial(int num, int &res){
   for(int i=1; i<=num;i++){
     res = res*i; // num = 2 -> res = 1*2, num=3 -> res=1*2*3
   }
+  //cout << res << num << endl;
 }
 
 // n! = n*(n-1)!
