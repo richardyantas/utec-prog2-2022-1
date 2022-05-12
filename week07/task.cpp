@@ -10,6 +10,12 @@ struct point{
 };
 
 bool esta_dentro(vector<point> cuadrado, point punto){
+  int xmax = max(max(max(cuadrado[0].x, cuadrado[1].x),cuadrado[2].x),cuadrado[3].x);
+  int xmin = min(min(min(cuadrado[0].x, cuadrado[1].x),cuadrado[2].x),cuadrado[3].x);
+  int ymax = max(max(max(cuadrado[0].y, cuadrado[1].y),cuadrado[2].y),cuadrado[3].y);
+  int ymin = min(min(min(cuadrado[0].y, cuadrado[1].y),cuadrado[2].y),cuadrado[3].y);
+  if( xmin >= punto.x || punto.x >= xmax  ){ return false;}
+  if( ymin >= punto.y || punto.y >= ymax  ){ return false;}
   return true;
 };
 
@@ -29,6 +35,7 @@ int main(){
 }
 
 /*
+Input:
 
 5
 0 5
@@ -56,6 +63,8 @@ int main(){
 -2 4
 -2 0
 -3 3
+
+Output:
 
 NO
 YES
