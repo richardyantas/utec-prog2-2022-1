@@ -13,7 +13,8 @@ int main() {
   printf("\x1b[2J");
  
   for (;;) {
-    memset(b, 32, 1760);
+    //memset(b, 32, 1760);
+    memset(b, 'a', 1760);
     memset(z, 0, 7040);
     float rate = 0.3;  
     for (j = 0; 6.28 > j; j += rate*0.07) {
