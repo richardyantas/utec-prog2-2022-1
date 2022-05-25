@@ -1,28 +1,34 @@
-#include<iostream>
+#include <iostream>
 using namespace std;
 
-class A{
-  int x;
+class A {
+    int x;
+
   public:
-  A(int a){
-    cout << "constructor called" <<  a << endl;
-  };
-  ~A(){
-    cout << "destructor called" << endl;
-  };
+    int getx() { return x; }
+    A() { cout << "countstructor vacio called" << endl; };
+    A(int a) {
+        x = a;
+        cout << "constructor con data called" << a << endl;
+    };
+    ~A() { cout << "destructor called" << endl; };
 };
 
-void func(){  
-  // A a;
-  A *p = new A(3);
-  delete p;
+A *func() {
+    // A a;
+    A *p = new A(3);
+    return p;
 }
 
-int main(){
-  // A *p = new A;
-  // delete p;
-  // cout << "deleted called" << endl;
-  func();
-  cout << "after func" << endl;
-  return 0;
+int main() {
+    // A *p = new A;
+    // delete p;
+    // cout << "deleted called" << endl;
+
+    A *q;
+    q = func();
+    cout << q->getx() << endl;
+    delete q;
+    cout << "after func" << endl;
+    return 0;
 }
