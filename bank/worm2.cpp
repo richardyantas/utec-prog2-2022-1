@@ -36,21 +36,30 @@ char keypress() {
   return c;
 }
 
-int x_obj = 25;
-int y_obj = 25;
-
 class Worm{   
-  public:    
   int size;
   int x;
   int y;
+  int head;
+  int xo;
+  int yo;
+  int apple;
+  int score;
+  vector<int> body;
+  public:      
     Worm(int _size=1){
+      score = 0;
       size = _size;
       x = 1;
       y = 1;
+      xo = rand()%78;
+      yo = rand()%21;
+      head = x + 80*(y-1);      
+      apple = xo + 80*(yo-1);
+      body.push_back(head);
     }
 
-    void update(){      
+    void update(){       
       char c = keypress();       
       switch(c){
         case 'w':
@@ -71,32 +80,49 @@ class Worm{
         default:
           break;
       }      
+      head = x + 80*(y-1);
+      if(head == apple){
+        score += 1;
+        xo = rand()%78+1;
+        yo = rand()%21+1;
+        apple = xo + 80*(yo-1);
+      }
     }
 
     void render(string &env){
-      int k, pos = x + 80*(y-1);
-      env[pos] = '@'; // char(1); // '@'
-      for (k = 0; k < 1761; k++) {
-        if(k == pos){
+      // state = x + 80*(y-1);
+      env[head] = '@'; // char(1); // '@'
+      env[apple] = 'o';
+       
+      for (int k = 0; k < 1761; k++) {
+        if(k == head){
+          cout << CYAN;
+          cout << (k % 80  ? env[k] : char(10));
+          cout << BLACK;
+        }
+        else if(k == apple){
           cout << RED;
           cout << (k % 80  ? env[k] : char(10));
-          cout << RESET;
-        }else{
+          cout << BLACK;
+        }
+        else{
           cout << (k % 80 ? env[k] : char(10));          
         }
-      }      
-      // cout << RED << x << "," <<  y << RESET;
+      }            
     }
 
     int get_x(){return x;}
     int get_y(){return y;}
+
+    int get_apple(){return apple;}
+    int get_score(){return score;}
 };
 
-int main() {    
+int main() {   
   string env(1760,'.');
   string score(200,' ');
   //string env(1760,char(32));
-  Worm worm;   
+  Worm worm;
   cout << "\x1b[2J";  // test on console cling
   cout << "\x1b[H";   // test on console cling -> cout << "\x1b[2J" << "\x1b[H"; // test on cling !
   // define clear cout << "\x1b[2J" << "\x1b[H";   // on cling
@@ -104,18 +130,24 @@ int main() {
   for (;;) {    
     score.assign(200,' ');
     env.assign(1760,'.'); // '.'
-    worm.update();    
+    worm.update();
     cout << "\x1b[H";
     worm.render(env);
     string pos = to_string(worm.get_x())+","+to_string(worm.get_y());
     // cout << pos << endl;
     score.replace(0,pos.size(),pos);
-    cout << RED;  
-    cout << score[0];  
+    cout << RED;
+    cout << score[0];
     for (int i = 1; i < score.size(); i++){
       cout << ((i % 80 ) ? score[i] : char(10));
     }
-    cout << RESET << endl;
+    cout << WHITE << endl;
+    cout << "├────────"  << endl;
+    cout << "│ life: 3 │"  << endl;
+    cout << "│ score:  │" << worm.get_score() << endl;
+    cout << "└────────" << endl;
+
+    cout << BLACK << endl;
   }
   return 0;
 }
