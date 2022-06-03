@@ -117,24 +117,50 @@ class Worm {
     int get_score() { return score; }
 };
 
+bool welcome(string &env) {
+    bool start = false;
+    while (!start) {
+        // welcome(env);
+        env.insert(800, "Welcome");
+        start = true;
+    }
+    // show menu
+    char c  = keypress();
+    int num = 0;
+    switch (c) {
+    case KEY_DOWN:
+        num += 1;
+        break;
+    case KEY_UP:
+        num -= 1;
+        break;
+    default:
+        break;
+    }
+}
+
+void gameover(string &env) {}
+
 int main() {
     string env(1760, '.');
     string score(200, ' ');
     // string env(1760,char(32));
+    bool start = false;
+
     Worm worm;
     cout << "\x1b[2J"; // test on console cling
     cout << "\x1b[H"; // test on console cling -> cout << "\x1b[2J" << "\x1b[H";
                       // // test on cling !
     // define clear cout << "\x1b[2J" << "\x1b[H";   // on cling
+
     worm.render(env);
-    for (;;) {
+    for (; start;) {
         score.assign(200, ' ');
         env.assign(1760, '.'); // '.'
         worm.update();
         cout << "\x1b[H";
         worm.render(env);
         string pos = to_string(worm.get_x()) + "," + to_string(worm.get_y());
-        // cout << pos << endl;
         score.replace(0, pos.size(), pos);
         cout << RED;
         cout << score[0];
@@ -142,11 +168,10 @@ int main() {
             cout << ((i % 80) ? score[i] : char(10));
         }
         cout << WHITE << endl;
-        cout << "├────────" << endl;
-        cout << "│ life: 3 │" << endl;
-        cout << "│ score:  │" << worm.get_score() << endl;
-        cout << "└────────" << endl;
-
+        cout << "┏───────────┓" << endl;
+        cout << "│ life:   3 │" << endl;
+        cout << "│ score: 25 │" << worm.get_score() << endl;
+        cout << "└───────────┛" << endl;
         cout << BLACK << endl;
     }
     return 0;
