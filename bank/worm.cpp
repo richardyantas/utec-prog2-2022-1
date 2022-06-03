@@ -1,5 +1,5 @@
 #include <bits/stdc++.h>
-// #include <pthread.h>
+#include <cstring>
 #include <stdio.h>
 #include <stdlib.h>
 #define KEY_UP 72
@@ -26,10 +26,6 @@
 #define BOLDWHITE "\033[1m\033[37m"   /* Bold White */
 
 using namespace std;
-
-// g++ -pthread worm.cpp && ./a.out
-// g++ -pthread worm.cpp && ./a.out
-
 char keypress() {
     system("/bin/stty raw");
     char c;
@@ -40,43 +36,38 @@ char keypress() {
     return c;
 }
 
-int x_obj = 25;
-int y_obj = 25;
-
 class Worm {
-  public:
     int size;
     int x;
     int y;
+    int head;
+    int xo;
+    int yo;
+    int apple;
+    int score;
+    vector<int> body;
+
+  public:
     Worm(int _size = 1) {
-        size = _size;
-        x    = 40;
-        y    = 20;
-    }
-    void render(char env[]) {
-        int k, pos = x + 80 * y;
-        env[pos] = '@';
-        for (k = 0; k < 1761; k++) {
-            if (k == pos) {
-                cout << RED;
-                putchar(k % 80 ? env[k] : 10);
-                cout << RESET << endl;
-            } else {
-                putchar(k % 80 ? env[k] : 10);
-            }
-        }
-        cout << RED << x << "," << y << RESET << endl;
+        score = 0;
+        size  = _size;
+        x     = 1;
+        y     = 1;
+        xo    = rand() % 78;
+        yo    = rand() % 21;
+        head  = x + 80 * (y - 1);
+        apple = xo + 80 * (yo - 1);
+        body.push_back(head);
     }
 
     void update() {
         char c = keypress();
-        // cout << c << endl;
         switch (c) {
         case 'w':
-            y = max(0, y - 1);
+            y = max(1, y - 1);
             break;
         case 's':
-            y = min(21, y + 1);
+            y = min(22, y + 1);
             break;
         case 'a':
             x = max(1, x - 1);
@@ -90,41 +81,98 @@ class Worm {
         default:
             break;
         }
-        // x++;
-        // if(x==x_obj && y==y_obj){
-        //   size++;
-        // }
+        head = x + 80 * (y - 1);
+        if (head == apple) {
+            score += 1;
+            xo    = rand() % 78 + 1;
+            yo    = rand() % 21 + 1;
+            apple = xo + 80 * (yo - 1);
+        }
     }
+
+    void render(string &env) {
+        // state = x + 80*(y-1);
+        env[head]  = '@'; // char(1); // '@'
+        env[apple] = 'o';
+
+        for (int k = 0; k < 1761; k++) {
+            if (k == head) {
+                cout << CYAN;
+                cout << (k % 80 ? env[k] : char(10));
+                cout << BLACK;
+            } else if (k == apple) {
+                cout << RED;
+                cout << (k % 80 ? env[k] : char(10));
+                cout << BLACK;
+            } else {
+                cout << (k % 80 ? env[k] : char(10));
+            }
+        }
+    }
+
+    int get_x() { return x; }
+    int get_y() { return y; }
+
+    int get_apple() { return apple; }
+    int get_score() { return score; }
 };
 
+bool welcome(string &env) {
+    bool start = false;
+    while (!start) {
+        // welcome(env);
+        env.insert(800, "Welcome");
+        start = true;
+    }
+    // show menu
+    char c  = keypress();
+    int num = 0;
+    switch (c) {
+    case KEY_DOWN:
+        num += 1;
+        break;
+    case KEY_UP:
+        num -= 1;
+        break;
+    default:
+        break;
+    }
+}
+
+void gameover(string &env) {}
+
 int main() {
-    float i, j;
-    float z[1760];
-    char env[1760];
-    printf("\x1b[2J");
-    int o;
+    string env(1760, '.');
+    string score(200, ' ');
+    // string env(1760,char(32));
+    bool start = false;
+
     Worm worm;
-    memset(env, '.', 1760); // 32
-    printf("\x1b[H");
+    cout << "\x1b[2J"; // test on console cling
+    cout << "\x1b[H"; // test on console cling -> cout << "\x1b[2J" << "\x1b[H";
+                      // // test on cling !
+    // define clear cout << "\x1b[2J" << "\x1b[H";   // on cling
+
     worm.render(env);
-    for (;;) {
-        memset(env, '.', 1760); // 32
+    for (; start;) {
+        score.assign(200, ' ');
+        env.assign(1760, '.'); // '.'
         worm.update();
-        printf("\x1b[H");
+        cout << "\x1b[H";
         worm.render(env);
+        string pos = to_string(worm.get_x()) + "," + to_string(worm.get_y());
+        score.replace(0, pos.size(), pos);
+        cout << RED;
+        cout << score[0];
+        for (int i = 1; i < score.size(); i++) {
+            cout << ((i % 80) ? score[i] : char(10));
+        }
+        cout << WHITE << endl;
+        cout << "┏───────────┓" << endl;
+        cout << "│ life:   3 │" << endl;
+        cout << "│ score: 25 │" << worm.get_score() << endl;
+        cout << "└───────────┛" << endl;
+        cout << BLACK << endl;
     }
     return 0;
 }
-
-// static volatile bool keep_running = true;
-// static void* userInput_thread(void*){
-//     // while(keep_running) {
-//     //     if ( KEY_UP == keypress() ){ // opt == 'q'
-//     //         x++;
-//     //         keep_running = false;
-//     //     }
-//     // }
-// }
-
-// pthread_t tId;
-// (void) pthread_create(&tId, 0, userInput_thread, 0);
