@@ -154,7 +154,7 @@ int main() {
     // define clear cout << "\x1b[2J" << "\x1b[H";   // on cling
 
     worm.render(env);
-    for (; start;) {
+    for (;;) {
         score.assign(200, ' ');
         env.assign(1760, '.'); // '.'
         worm.update();
