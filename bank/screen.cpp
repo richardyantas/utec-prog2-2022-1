@@ -93,13 +93,16 @@ int main() {
     add_text(screen, "[ Welcome Utec 2022 ]", 38, 16);
     add_text(screen, "Enter Name:  ", 29, 14);
     add_text(screen, "PRESS Enter to continue or Esc to Exit!", 28, 12);
+
     string name(20, ' ');
+    // string name = "                    ";
+
     int i = 0;
     cout << "\x1b[2J"; // test on console cling
     cout << "\x1b[H"; // test on console cling -> cout << "\x1b[2J" << "\x1b[H";
     // square_wrapper(screen);
     screen_wrapper(screen, 80, 20);
-    bool start = false, menu = false;
+    bool start = false, mostrar_rooms = false;
 
     // cout << screen << endl;
     while (1) {
@@ -110,15 +113,11 @@ int main() {
         if (c == ESC) {
             break;
         }
-        if (!menu) {
+        if (mostrar_rooms == false) {
             if (c == ENTER && name[0] != ' ') {
-                menu = true;
-                add_text(screen, "[ Rooms]", 38, 16);
-                add_text(screen, "Room 1:  ", 29, 14);
-                add_text(screen, "Room 2:  ", 29, 13);
-                add_text(screen, "Room 3:  ", 29, 12);
-                add_text(screen, "Room 4:  ", 29, 11);
+                mostrar_rooms = true;
                 cout << "\x1b[H";
+                // continue;
                 // start
             } else if (c == ENTER && name[0] == ' ') {
                 // warning
@@ -133,7 +132,12 @@ int main() {
             add_text(screen, "PRESS Enter to continue or Esc to Exit!", 28, 12);
             cout << "\x1b[H";
             add_text(screen, name, 42, 14);
-        } else {
+        }
+
+        if (mostrar_rooms == true) {
+            screen.assign(81 * 21, '*');
+            update_screen(screen);
+
             add_text(screen, "[ Rooms]", 38, 16);
             add_text(screen, "Room 1:  ", 29, 14);
             add_text(screen, "Room 2:  ", 29, 13);
